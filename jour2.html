@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Tendances WEB 2023</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="author" content="Isabelle NANI">
+        <meta name="description" content="Web tuto">
+        <meta name="keywords" content="flat design, webdesign trends, hover animation">
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    </head>
+    <body>
+
+        <section class="w3-container">
+            <h1>
+                Tendances WEB 2023
+            </h1>
+            <header>
+                Nous sommes partout, à tout moment et tout le monde à la fois.
+            </header>
+        </section>
+        <section class="w3-container">
+            <nav>
+                <a href="index.html">Home</a> | 
+                <a href="jour1.html">1</a> 
+
+            </nav>
+        </section> 
+        <section class="w3-container">
+            <h1>
+
+            </h1>
+
+        </section>
+        <section class="w3-container">
+            <h1>
+                W3.CSS
+            </h1>
+            <p>
+                LE framework responsive, mobile first en CSS :-)
+            </p>
+            <h2>Simple comme SELECT & CTRL+V</h2>
+            <h3>Diaporama</h3>
+            <p class="w3-tooltip"> Analysez et inspirez-vous du code disponible sur le site de W3Schools : 
+                <a target="_blank" href="https://www.w3schools.com/w3css/tryit.asp?filename=tryw3css_slideshow_dots2">Diaporama</a>
+            </p>
+            <h2>Exercices</h2>
+            <p>
+                prérequis : préparez 3 images de 1000px sur 350px
+            </p>
+            <ol start="7">
+                <li>éditez la page <code class="w3-codespan w3-black">index.html</code></li>
+                <li>
+                    placez les balises
+                    <code class="w3-codespan w3-text-blue">header</code>, 
+                    <code class="w3-codespan w3-text-blue">footer</code> 
+                </li>
+                <li>
+                    intégrez le diaporama
+                    <ul>
+                        <li class="w3-tooltip">la <code class="w3-codespan">div</code> contenant les images<span class="w3-text">, dans la balise <code class="w3-codespan">header</code></span></li>
+                        <li class="w3-tooltip">le <code class="w3-codespan w3-pale-green">script</code><span class="w3-text">, dans la balise <code class="w3-codespan">body</code>, juste avant la fermeture de la balise</span></li>
+                        <li class="w3-tooltip">les styles <b class="w3-pale-yellow">interne</b> à la page<span class="w3-text">, dans la balise <code class="w3-codespan">head</code></span></li>
+                    </ul>
+                </li>              
+            </ol>
+            <h3 onclick="myFunction()" class="w3-btn w3-green">Solution</h3>
+            <div id="seesol" class="w3-code notranslate w3-hide">
+                <pre>
+&lt;!DOCTYPE html>
+&lt;html>
+    &lt;head>
+        &lt;title>Tendances WEB 2023&lt;/title>
+        &lt;meta charset="UTF-8">
+        &lt;meta name="viewport" content="width=device-width, initial-scale=1.0">
+        &lt;link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+                </pre>
+                <pre class="w3-pale-yellow">
+        &lt;style>
+            .mySlides {display:none}
+            .w3-left, .w3-right, .w3-badge {cursor:pointer}
+            .w3-badge {height:13px; width:13px; padding:0}
+        &lt;/style>
+                </pre>
+                <pre>
+    &lt;/head>
+    &lt;body>
+        &lt;header>
+                </pre>
+                <pre class="w3-text-red">
+            &lt;div class="w3-content w3-display-container" style="max-width:1000px">
+                &lt;img class="mySlides" src="img/1-nepal.jpg" style="width:100%">
+                &lt;img class="mySlides" src="img/2-loup.png" style="width:100%">
+                &lt;img class="mySlides" src="img/3-weave.png" style="width:100%">
+                
+                &lt;div class="w3-center w3-container w3-section w3-large w3-text-white w3-display-bottommiddle" style="width:100%">
+                    &lt;div class="w3-left w3-hover-text-khaki" onclick="plusDivs(-1)">&#10094;&lt;/div>
+                    &lt;div class="w3-right w3-hover-text-khaki" onclick="plusDivs(1)">&#10095;&lt;/div>
+                    &lt;span class="w3-badge demo w3-border w3-transparent w3-hover-white" onclick="currentDiv(1)">&lt;/span>
+                    &lt;span class="w3-badge demo w3-border w3-transparent w3-hover-white" onclick="currentDiv(2)">&lt;/span>
+                    &lt;span class="w3-badge demo w3-border w3-transparent w3-hover-white" onclick="currentDiv(3)">&lt;/span>
+                &lt;/div>
+            &lt;/div>
+                </pre>
+                <pre>
+        &lt;/header>
+        &lt;section class="w3-container w3-center">
+            &lt;h1>Tendances WEB 2023&lt;/h1>
+            &lt;p class="w3-animate-fading">Nous sommes partout, à tout moment et tout le monde à la fois.&lt;/p>
+        &lt;/section>
+        &lt;footer class="w3-center">
+            _ 
+        &lt;/footer>
+                </pre>
+                <pre class="w3-pale-green">
+        &lt;script>
+            var slideIndex = 1;
+            showDivs(slideIndex);
+
+            function plusDivs(n) {
+                showDivs(slideIndex += n);
+            }
+
+            function currentDiv(n) {
+                showDivs(slideIndex = n);
+            }
+
+            function showDivs(n) {
+                var i;
+                var x = document.getElementsByClassName("mySlides");
+                var dots = document.getElementsByClassName("demo");
+                if (n > x.length) {
+                    slideIndex = 1
+                }
+                if (n < 1) {
+                    slideIndex = x.length
+                }
+                for (i = 0; i < x.length; i++) {
+                    x[i].style.display = "none";
+                }
+                for (i = 0; i < dots.length; i++) {
+                    dots[i].className = dots[i].className.replace(" w3-white", "");
+                }
+                x[slideIndex - 1].style.display = "block";
+                dots[slideIndex - 1].className += " w3-white";
+            }
+        &lt;/script>
+                </pre>
+                <pre>
+    &lt;/body>
+&lt;/html>
+                </pre>    
+            </div>
+            <h3>Liens utiles</h3>
+            <ul>
+                <li>
+                    <a target="_blank" href="https://www.w3schools.com/w3css/w3css_case.asp">
+                        Building a Responsive Web Site From Scratch
+                    </a>
+                </li>
+                <li>
+                    <a target="_blank" href="https://www.w3schools.com/w3css/tryit.asp?filename=tryw3css_trends_colors">
+                        Flat design colors
+                    </a>
+                </li>
+                <li>
+                    <a target="_blank" href="https://www.w3schools.com/w3css/tryit.asp?filename=tryw3css_trends_shadows">
+                        Almost flat</a> acquires more depth, brighter colors, complex shadows, and dimension.
+                </li>
+                <li>
+                    <a target="_blank" href="https://www.w3schools.com/w3css/tryit.asp?filename=tryw3css_slideshow_dots2">
+                        Diaporama  
+                    </a>   
+                </li>
+            </ul>
+        </section>
+        <script>
+            function myFunction() {
+                var x = document.getElementById("seesol");
+                if (x.className.indexOf("w3-show") == -1) {
+                    x.className += " w3-show";
+                } else {
+                    x.className = x.className.replace(" w3-show", "");
+                }
+            }
+        </script>
+
+    </body>
+</html>

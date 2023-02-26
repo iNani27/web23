@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Tendances WEB 2023</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="author" content="Isabelle NANI">
+        <meta name="description" content="Web tuto">
+        <meta name="keywords" content="flat design, webdesign trends, hover animation">
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    </head>
+    <body>
+
+        <section class="w3-container">
+            <h1>
+                Tendances WEB 2023
+            </h1>
+            <header>
+                Nous sommes partout, à tout moment et tout le monde à la fois.
+            </header>
+        </section>
+        <section class="w3-container">
+            <nav>
+                <a href="index.html">Home</a> | 
+                <a href="jour2.html">2</a>
+            </nav>
+        </section> 
+        <section class="w3-container">
+            <h1>
+
+            </h1>
+
+        </section>
+        <section class="w3-container">
+            <h1>
+                W3.CSS
+            </h1>
+            <p>
+                LE framework responsive, mobile first sans JavaScript, juste en CSS :-)
+            </p>
+            <h2>Simple comme CTRL+V</h2>
+            <p class="w3-tooltip"> Liez votre page HTML à une feuille de styles <b>externe</b> <span class="w3-text">(<em>et ajoutez les classes aux éléments</em>)</span>
+                <code class="w3-codespan"> 
+                    &lt;link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"&gt;
+                </code>
+            </p>
+            <h2>Exercices</h2>
+            <ol>
+                <li class="w3-tooltip">créez une page <span class="w3-text">index.</span>html</li>
+                <li>
+                    placez les balises 
+                    <code class="w3-codespan w3-blue">html</code>, 
+                    <code class="w3-codespan w3-text-blue">head</code>, 
+                    <code class="w3-codespan w3-text-blue">body</code> 
+                </li>
+                <li>
+                    dans la balise <code class="w3-codespan">head</code>, ajoutez les métas <code class="w3-codespan w3-text-green">charset</code> & <code class="w3-codespan w3-text-green">viewport</code> 
+                </li>
+                <li>dans la balise <code class="w3-codespan">body</code>, ajoutez 
+                    <code class="w3-codespan  w3-text-purple">section</code>,  
+                    <code class="w3-codespan w3-tooltip">titre de premier niveau <span class="w3-text">h1</span></code>, 
+                    <code class="w3-codespan">paragraphe</code>
+                </li>
+                <li>
+                    pour mettre en style, ajoutez la ligne de code liant la <em>page html</em> à la <i>feuille de style</i> du framework <span class="w3-indigo">W3.CSS</span>
+                </li>
+                <li class="w3-tooltip">exemlpe : pour créer une marge et "<em>décoller</em>" le contenu du bord de la fenêtre du navigateur, ajoutez la class <code class="w3-codespan w3-text-green">w3-container</code>aux balises <code class="w3-codespan w3-text-purple">section</code> <span class="w3-text">(find and replace)</span></li>
+            </ol>
+            <h3 onclick="myFunction()" class="w3-btn w3-green">Solution</h3>
+            <div id="seesol" class="w3-code notranslate w3-hide">
+                <pre>
+&lt;!DOCTYPE html>
+&lt;html>
+    &lt;head>
+        &lt;title>Tendances WEB 2023&lt;/title>
+        &lt;meta charset="UTF-8">
+        &lt;meta name="viewport" content="width=device-width, initial-scale=1.0">
+        &lt;link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    &lt;/head>
+    &lt;body>
+        &lt;section class="w3-container">
+            &lt;h1>Tendances WEB 2023&lt;/h1>
+            &lt;p>Nous sommes partout, à tout moment et tout le monde à la fois.&lt;/p>
+        &lt;/section>
+    &lt;/body>
+&lt;/html>
+                </pre>    
+            </div>
+            <h3>Liens utiles</h3>
+            <ul>
+                <li>
+                    <a target="_blank" href="https://www.w3schools.com/w3css/w3css_case.asp">
+                        Building a Responsive Web Site From Scratch
+                    </a>
+                </li>
+                <li>
+                    <a target="_blank" href="https://www.w3schools.com/w3css/tryit.asp?filename=tryw3css_trends_colors">
+                        Flat design colors
+                    </a>
+                </li>
+                <li>
+                    <a target="_blank" href="https://www.w3schools.com/w3css/tryit.asp?filename=tryw3css_trends_shadows">
+                        Almost flat</a> acquires more depth, brighter colors, complex shadows, and dimension.
+                </li>
+            </ul>
+        </section>
+        <script>
+            function myFunction() {
+                var x = document.getElementById("seesol");
+                if (x.className.indexOf("w3-show") == -1) {
+                    x.className += " w3-show";
+                } else {
+                    x.className = x.className.replace(" w3-show", "");
+                }
+            }
+        </script>
+
+    </body>
+</html>
