@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>clic, double clic et menu contextuel</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Web tuto">
+        <meta name="keywords" content="clic, double clic et menu contextuel">
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+        <style>
+            [value~="Gauche"]{color:#000!important;background-color:#9BB7D4!important}
+            [value~="Double"]{color:#fff!important;background-color:#E9897E!important;}
+            [value~="Droite"]{color:#000!important;background-color:#F5DF4D!important;}
+
+            .w3-2021-marigold
+            {color:#fff!important;background-color:#FDAC53!important}
+            .w3-2021-cerulean
+            {color:#000!important;background-color:#9BB7D4!important}
+            .w3-2021-rust
+            {color:#fff!important;background-color:#B55A30!important}
+            .w3-2021-illuminating
+            {color:#000!important;background-color:#F5DF4D!important}
+            .w3-2021-french-blue
+            {color:#fff!important;background-color:#0072B5!important}
+            .w3-2021-green-ash
+            {color:#000!important;background-color:#A0DAA9!important}
+            .w3-2021-burnt-coral
+            {color:#fff!important;background-color:#E9897E!important}
+            .w3-2021-mint
+            {color:#fff!important;background-color:#00A170!important}
+            .w3-2021-amethyst-orchid
+            {color:#fff!important;background-color:#926AA6!important}
+            .w3-2021-raspberry-sorbet
+            {color:#fff!important;background-color:#D2386C!important}
+            .w3-2021-inkwell
+            {color:#fff!important;background-color:#363945!important}
+            .w3-2021-ultimate-gray
+            {color:#fff!important;background-color:#939597!important}
+            .w3-2021-buttercream
+            {color:#000!important;background-color:#EFE1CE!important}
+            .w3-2021-desert-mist
+            {color:#000!important;background-color:#E0B589!important}
+            .w3-2021-willow
+            {color:#fff!important;background-color:#9A8B4F!important}
+        </style>
+    </head>
+    <body>
+        <h1 class="w3-center">
+            Clic à <span class="">Gauche</span>, <span class="">Double</span> clic ou clic à <span class="">Droite</span>
+        </h1>
+
+        <!--     <a class="w3-btn w3-2021-amethyst-orchid"></a>
+             <a class="w3-btn w3-2021-burnt-coral"></a>
+             <a class="w3-btn w3-2021-buttercream"></a>
+             <a class="w3-btn w3-2021-cerulean"></a>
+             <a class="w3-btn w3-2021-desert-mist"></a>
+             <a class="w3-btn w3-2021-french-blue"></a>
+             <a class="w3-btn w3-2021-green-ash"></a>
+             <a class="w3-btn w3-2021-illuminating"></a>
+             <a class="w3-btn w3-2021-inkwell"></a>
+             <a class="w3-btn w3-2021-marigold"></a>
+             <a class="w3-btn w3-2021-mint"></a>
+             <a class="w3-btn w3-2021-raspberry-sorbet"></a>     
+             <a class="w3-btn w3-2021-rust"></a>   
+             <a class="w3-btn w3-2021-ultimate-gray"></a>
+             <a class="w3-btn w3-2021-willow"></a>
+        -->
+        <table class="w3-table-all w3-centered">
+            <tr>
+                <td><input type="button" class="w3-btn" id="1"></td>
+                <td><input type="button" class="w3-btn" id="2" ></td>
+                <td><input type="button" class="w3-btn"  id="3" ></td>
+                <td><input type="button" class="w3-btn" id="4" ></td>
+                <td><input type="button" class="w3-btn" id="5"></td>
+
+            </tr>
+            <tr>
+                <td><input type="button" class="w3-btn" id="6" ></td>
+                <td><input type="button" class="w3-btn" id="7" ></td>
+                <td><input type="button" class="w3-btn"  id="8" ></td>
+                <td><input type="button" class="w3-btn" id="9" ></td>
+                <td><input type="button" class="w3-btn" id="10"></td>
+
+            </tr>
+
+            <tr>
+                <td><input type="button" class="w3-btn" id="11" ></td>
+                <td><input type="button" class="w3-btn" id="12" ></td>
+                <td><input type="button" class="w3-btn"  id="13" ></td>
+                <td><input type="button" class="w3-btn" id="14" ></td>
+                <td><input type="button" class="w3-btn" id="15"></td>
+
+            </tr>
+            <tr>
+                <td><input type="button" class="w3-btn" id="16" ></td>
+                <td><input type="button" class="w3-btn" id="17" ></td>
+                <td><input type="button" class="w3-btn"  id="18" ></td>
+                <td><input type="button" class="w3-btn" id="19" ></td>
+                <td><input type="button" class="w3-btn" id="20"></td>
+
+            </tr>
+            <tr>
+                <td><input type="button" class="w3-btn" id="21" ></td>
+                <td><input type="button" class="w3-btn" id="22" ></td>
+                <td><input type="button" class="w3-btn"  id="23" ></td>
+                <td><input type="button" class="w3-btn" id="24" ></td>
+                <td><input type="button" class="w3-btn" id="25"></td>
+
+            </tr>
+            <tr>
+                <td><input type="button" class="w3-btn" id="26" ></td>
+                <td><input type="button" class="w3-btn" id="27" ></td>
+                <td><input type="button" class="w3-btn"  id="28" ></td>
+                <td><input type="button" class="w3-btn" id="29" ></td>
+                <td><input type="button" class="w3-btn" id="30"></td>
+
+            </tr>
+            <tr>
+                <td><input type="button" class="w3-btn" id="31" ></td>
+                <td><input type="button" class="w3-btn" id="32" ></td>
+                <td><input type="button" class="w3-btn"  id="33" ></td>
+                <td><input type="button" class="w3-btn" id="34" ></td>
+                <td><input type="button" class="w3-btn" id="35"></td>
+
+            </tr>
+            <tr>
+                <td><input type="button" class="w3-btn" id="36" ></td>
+                <td><input type="button" class="w3-btn" id="37" ></td>
+                <td><input type="button" class="w3-btn"  id="38" ></td>
+                <td><input type="button" class="w3-btn" id="39" ></td>
+                <td><input type="button" class="w3-btn" id="40"></td>
+
+            </tr>
+        </table>
+
+
+
+
+        <script type="text/javascript" >
+
+            var tab = new Array("Double", "Gauche", "Droite");
+            function getRandomArbitary(min, max) {
+                return Math.floor(Math.random() * (max - min) + min);
+            }
+
+            for (var i = 1; i <= 40; i++) {
+                var aleatoire = getRandomArbitary(0, 3);
+                var cible = document.getElementById(i);
+                cible.setAttribute("value", tab[aleatoire]);
+            }
+
+            for (var i = 1; i <= 40; i++) {
+
+                var cible = document.getElementById(i);
+                var valeur = cible.getAttribute("value");
+                cible.setAttribute("name", valeur);
+
+            }
+
+        </script>
+
+        <script>
+
+            $(document).ready(function () {
+
+
+                for (var i = 1; i < 41; i++) {
+
+                    $("#" + i)
+                            .click(function (e) {
+                                if (e.which != 3) {
+                                    if ($(this).attr("name") == "Gauche")
+                                        $(this).hide();
+                                }
+
+
+                            })
+                            .mousedown(function (e) {
+                                if (e.which == 3) {
+                                    if ($(this).attr("name") == "Droite")
+                                        $(this).slideUp(1000);
+
+                                }
+                            })
+                            .dblclick(function () {
+                                if ($(this).attr("name") == "Double")
+                                    $(this).fadeOut(1000);
+
+
+                            });
+
+
+
+
+                }
+            });
+        </script>
+
+
+        <script type="text/javascript">
+            document.oncontextmenu = rightClick;
+
+            function rightClick(clickEvent) {
+                clickEvent.preventDefault();
+                // return false;
+            }
+        </script>
+
+    </body>
+</html>
