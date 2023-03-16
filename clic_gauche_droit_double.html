@@ -48,7 +48,7 @@
     </head>
     <body>
         <h1 class="w3-center">
-            Clic à <span class="w3-2021-cerulean">Gauche</span>, <span class="w3-2021-burnt-coral">Double</span> clic ou clic à <span class="w3-2021-illuminating">Droite</span>
+            Clic à gauche, double clic ou clic à droite
         </h1>
 
         <!--     <a class="w3-btn w3-2021-amethyst-orchid"></a>
@@ -180,7 +180,7 @@
                             .mousedown(function (e) {
                                 if (e.which == 3) {
                                     if ($(this).attr("name") == "Droite")
-                                        $(this).slideUp(2000); // 2000 = 2sec. entre 2 clic du double click cf https://www.w3schools.com/jquery/tryit.asp?filename=tryjquery_eff_slideup_slidedown_speed et https://www.w3schools.com/jquery/jquery_slide.asp
+                                        $(this).slideUp(1000); // 2000 = 2sec. entre 2 clic du double click cf https://www.w3schools.com/jquery/tryit.asp?filename=tryjquery_eff_slideup_slidedown_speed et https://www.w3schools.com/jquery/jquery_slide.asp
 
                                 }
                             })
