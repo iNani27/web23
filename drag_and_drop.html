@@ -37,7 +37,7 @@
                 padding: 10px; 
                 border: 5px dashed #aaaaaa; 
                 background: blue;
-                animation: mymove 35s infinite;
+                animation: mymove 55s infinite;
             }
             @keyframes mymove {
                 from {background-color: blue;}
@@ -75,7 +75,12 @@
                 border: none;
                 outline: none;
                 transition: 0.4s;
+				animation: mymove2 55s infinite;
 
+            }
+			@keyframes mymove2 {
+                from {background-color: blue;}
+                to {background-color: white;}
             }
 
             /* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
@@ -104,14 +109,15 @@
             <br/>
             <img id="drag1" src="drag_and_drop.PNG" alt="Glisser déposer" draggable="true" ondragstart="drag(event)" onclick="myGrabbing()">
 
-
+			<p id="dragged" style="margin-top:100px;margin-bottom: 50px; font-size : 44px; "></p>
+			
             <p>
                 <a class="button" href="javascript:location.reload();">recommencer</a>
 
             </p>
 
-            <p class="accordion">Comment faire un glisser déposer?</p>
-            <ol class="panel">
+            <p class="accordion hidden"><img src="astuce.png" alt="astuce" width="35">&nbsp;Comment faire un glisser déposer?</p>
+            <ol class="panel hidden">
                 <li>
                     Cliquer sur un élément graphique avec le bouton principal de la souris (le gauche) 
                 </li>
@@ -137,7 +143,9 @@
                 ev.preventDefault();
                 var data = ev.dataTransfer.getData("text");
                 ev.target.appendChild(document.getElementById(data));
+				document.getElementById("dragged").innerHTML = "Bravo ;-) ";
             }
+
 
             function myGrabbing() {
                 document.getElementById("drag1").style.cursor = "grabbing";
