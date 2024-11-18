@@ -10,10 +10,10 @@
         <style>
             body{
                 background-color: darkblue; /* For browsers that do not support gradients */
-               
+
             }
             section { 
-		background-image: linear-gradient(to bottom right,darkblue, blue);
+                background-image: linear-gradient(to bottom right,darkblue, blue);
                 padding-top: 50px;
                 padding-bottom:  400px;
             }
@@ -23,35 +23,73 @@
                 text-indent: 50px;
                 text-align: center;
                 letter-spacing: 7px;
-		margin: 20px 20px;
+                margin: 20px 20px;
             }
-		ol, li {
-			text-align: left;
-			padding-left: 10px;
-		}
+            ol, li {
+                text-align: left;
+                padding-left: 10px;
+
+            }
             #div1 { 
                 margin: auto auto;
                 width: 350px; 
                 height: 160px; 
                 padding: 10px; 
                 border: 5px dashed #aaaaaa; 
+                background: blue;
+                animation: mymove 35s infinite;
             }
-		.button {
-  
-  border: 2px outset white;
+            @keyframes mymove {
+                from {background-color: blue;}
+                to {background-color: white;}
+            }
 
-  padding: 15px 32px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  margin: 4px 2px;
-  cursor: pointer;
-}
-		.button:hover{
-			 background-color: white; 
-  color: blue;
-		}
+            #drag1{
+                cursor: -webkit-grab; cursor: grab;
+            }
+            .button {
+
+                border: 2px outset white;
+
+                padding: 15px 32px;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                font-size: 16px;
+                margin: 4px 2px;
+                cursor: pointer;
+            }
+            .button:hover{
+                background-color: white; 
+                color: blue;
+            }
+
+            /* Style the buttons that are used to open and close the accordion panel */
+            .accordion {
+                background-color: #eee;
+                color: #444;
+                cursor: pointer;
+                padding: 18px;
+                width: 100%;
+                text-align: left;
+                border: none;
+                outline: none;
+                transition: 0.4s;
+
+            }
+
+            /* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+            .active, .accordion:hover {
+                background-color: #ccc;
+            }
+
+            /* Style the accordion panel. Note: hidden by default */
+            .panel {
+                padding: 0 18px;
+                background-color: #0d0d91; 
+                display: none;
+                overflow: hidden;
+            } 
         </style>
     </head>
 
@@ -61,30 +99,30 @@
         <section>
 
             <p>Veuillez faire un <b>glisser / déposer</b> de l'image dans le rectangle :</p>
-	
+
             <div id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
             <br/>
-            <img id="drag1" src="drag_and_drop.PNG" alt="Glisser déposer" draggable="true" ondragstart="drag(event)" >
+            <img id="drag1" src="drag_and_drop.PNG" alt="Glisser déposer" draggable="true" ondragstart="drag(event)" onclick="myGrabbing()">
 
 
             <p>
-			<a class="button" href="javascript:location.reload();">recommencer</a>
-		    
-	    </p>
-		
-	    <p>Comment faire un glisser déposer?</p>
-			<ol>
-				<li>
-				Cliquer sur un élément graphique avec du bouton principal de la souris (le gauche) 
-				</li>
-				<li>
-				Maintenir ce bouton enfoncé, et ...
-				</li>
-				<li>
-				Relâcher lorsque le pointeur a atteint sa cible.
-				</li>
-			</ol>
-			
+                <a class="button" href="javascript:location.reload();">recommencer</a>
+
+            </p>
+
+            <p class="accordion">Comment faire un glisser déposer?</p>
+            <ol class="panel">
+                <li>
+                    Cliquer sur un élément graphique avec le bouton principal de la souris (le gauche) 
+                </li>
+                <li>
+                    Maintenir ce bouton enfoncé, et ...
+                </li>
+                <li>
+                    Relâcher lorsque le pointeur a atteint sa cible.
+                </li>
+            </ol>
+
         </section>
         <script>
             function allowDrop(ev) {
@@ -100,6 +138,32 @@
                 var data = ev.dataTransfer.getData("text");
                 ev.target.appendChild(document.getElementById(data));
             }
+
+            function myGrabbing() {
+                document.getElementById("drag1").style.cursor = "grabbing";
+            }
+
+
+
+            var acc = document.getElementsByClassName("accordion");
+            var i;
+
+            for (i = 0; i < acc.length; i++) {
+                acc[i].addEventListener("click", function () {
+                    /* Toggle between adding and removing the "active" class,
+                     to highlight the button that controls the panel */
+                    this.classList.toggle("active");
+
+                    /* Toggle between hiding and showing the active panel */
+                    var panel = this.nextElementSibling;
+                    if (panel.style.display === "block") {
+                        panel.style.display = "none";
+                    } else {
+                        panel.style.display = "block";
+                    }
+                });
+            }
+
         </script>
     </body>
 
