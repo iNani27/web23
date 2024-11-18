@@ -13,19 +13,17 @@
                
             }
             section { 
-
-                background-image: linear-gradient(to bottom,darkblue,blue);
-
-
+				background-image: linear-gradient(to bottom right,darkblue, blue);
+                padding-top: 50px;
+                padding-bottom:  400px;
             }
             p, a {
                 text-transform: uppercase;
                 color: white;
                 text-indent: 50px;
-                text-align: justify;
+                text-align: center;
                 letter-spacing: 7px;
-
-
+				margin: 20px 20px;
             }
             #div1 { 
                 margin: auto auto;
@@ -42,14 +40,16 @@
     <body>
         <section>
 
-            <p>Faites un glissé/déposé de l'image dans le rectangle :</p>
+            <p>Veuillez faire un <b>glisser / déposer</b> de l'image dans le rectangle :</p>
             <div id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
             <br/>
             <img id="drag1" src="drag_and_drop.PNG" alt="Glisser déposer" draggable="true" ondragstart="drag(event)" >
 
 
-            <br/>
-            (<a href="javascript:location.reload();">recommencer</a>)
+            <p>
+			<a href="javascript:location.reload();">recommencer</a>
+			</p>
+			
         </section>
         <script>
             function allowDrop(ev) {
