@@ -8,18 +8,28 @@
 
 
         <style>
+            
+            /* 
+            #FDECB0 : jaune
+            #F7B267 : orange
+            bleu clair :#A7DAE1
+            bleu foncé : #303C6B
+            
+            
+            
+            */
             body{
-                background-color: darkblue; /* For browsers that do not support gradients */
+                background-color: #303C6B; /* For browsers that do not support gradients */
 
             }
             section { 
-                background-image: linear-gradient(to bottom right,darkblue, blue);
+                background-image: linear-gradient(to bottom right,#FDECB0, #F7B267);
                 padding-top: 50px;
                 padding-bottom:  400px;
             }
             p, a, ol, li {
-                text-transform: uppercase;
-                color: white;
+                font-variant: small-caps;
+                color: #303C6B;
                 text-indent: 50px;
                 text-align: center;
                 letter-spacing: 7px;
@@ -36,11 +46,11 @@
                 height: 160px; 
                 padding: 10px; 
                 border: 5px dashed #aaaaaa; 
-                background: blue;
+                background: #A7DAE1;
                 animation: mymove 55s infinite;
             }
             @keyframes mymove {
-                from {background-color: blue;}
+                from {background-color: #A7DAE1;}
                 to {background-color: white;}
             }
 
@@ -61,7 +71,7 @@
             }
             .button:hover{
                 background-color: white; 
-                color: blue;
+                color: #A7DAE1;
             }
 
             /* Style the buttons that are used to open and close the accordion panel */
@@ -75,11 +85,11 @@
                 border: none;
                 outline: none;
                 transition: 0.4s;
-				animation: mymove2 55s infinite;
+		animation: mymove2 55s infinite;
 
             }
 			@keyframes mymove2 {
-                from {background-color: blue;}
+                from {background-color: #A7DAE1;}
                 to {background-color: white;}
             }
 
@@ -91,7 +101,7 @@
             /* Style the accordion panel. Note: hidden by default */
             .panel {
                 padding: 0 18px;
-                background-color: #0d0d91; 
+                background-color: #A7DAE1; 
                 display: none;
                 overflow: hidden;
             } 
