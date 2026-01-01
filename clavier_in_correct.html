@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Exercice de Saisie</title>
+        <style>
+            /* Reset CSS */
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            /* Fond orange et centrage */
+            body {
+                font-family: Arial, sans-serif;
+                background: #ff8c00;
+                min-height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 20px;
+            }
+
+            /* Container principal blanc */
+            .container {
+                background: #fff;
+                border-radius: 10px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, .3);
+                padding: 30px;
+                max-width: 800px;
+                width: 100%;
+            }
+
+            /* Titre */
+            h1 {
+                text-align: center;
+                margin-bottom: 15px;
+                color: #333;
+            }
+
+            /* Paragraphe d'instructions */
+            p {
+                text-align: center;
+                margin-bottom: 30px;
+                color: #666;
+            }
+
+            /* Tableau */
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-bottom: 30px;
+            }
+
+            th, td {
+                border: 1px solid #ccc;
+                padding: 12px;
+                text-align: left;
+            }
+
+            th {
+                background: #f5f5f5;
+                font-weight: bold;
+            }
+
+            /* Champs de saisie */
+            input {
+                width: 100%;
+                padding: 8px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                font-size: 14px;
+            }
+
+            input:focus {
+                outline: none;
+                border-color: #ff8c00;
+                box-shadow: 0 0 0 2px rgba(255, 140, 0, .2);
+            }
+
+            /* Mot à saisir */
+            .word {
+                font-family: monospace;
+                font-size: 16px;
+            }
+
+            /* Colonne résultat */
+            .result {
+                text-align: center;
+                font-size: 24px;
+            }
+
+            /* Ligne correcte (vert) */
+            .correct {
+                background: #d4edda;
+            }
+
+            /* Ligne incorrecte (rouge) */
+            .incorrect {
+                background: #f8d7da;
+            }
+
+            /* Container du bouton */
+            .btn-container {
+                text-align: center;
+                margin-bottom: 20px;
+            }
+
+            /* Bouton de vérification */
+            button {
+                background: #ff8c00;
+                color: #fff;
+                border: none;
+                padding: 12px 30px;
+                border-radius: 6px;
+                font-size: 16px;
+                cursor: pointer;
+                transition: background .3s;
+            }
+
+            button:hover {
+                background: #e67e00;
+            }
+
+            /* Boîte d'affichage du score */
+            .score-box {
+                text-align: center;
+                padding: 20px;
+                background: #f8f9fa;
+                border-radius: 6px;
+            }
+
+            .score-num {
+                font-size: 28px;
+                margin-bottom: 10px;
+                color: #333;
+            }
+
+            .score-msg {
+                color: #666;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Exercice de Saisie</h1>
+            <p>Tapez les mots suivants dans les champs correspondants</p>
+
+            <!-- Tableau des mots -->
+            <table id="wordTable">
+                <thead>
+                    <tr>
+                        <th>Mot à saisir</th>
+                        <th>Votre saisie</th>
+                        <th style="width:80px;text-align:center">Résultat</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody">
+                    <!-- Les lignes seront générées par JavaScript -->
+                </tbody>
+            </table>
+
+            <!-- Bouton de vérification -->
+            <div class="btn-container">
+                <button onclick="verify()">Veuillez vérifier votre score</button>
+            </div>
+
+            <!-- Boîte du score (cachée au départ) -->
+            <div id="scoreBox" style="display:none" class="score-box">
+                <div class="score-num" id="scoreNum"></div>
+                <div class="score-msg" id="scoreMsg"></div>
+            </div>
+        </div>
+
+        <script>
+            // Liste des 15 mots à saisir
+            const words = [
+                {id: 1, word: 'hôpital'},
+                {id: 2, word: 'école'},
+                {id: 3, word: '580€'},
+                {id: 4, word: 'Août'},
+                {id: 5, word: 'BonJoUr'},
+                {id: 6, word: 'ça'},
+                {id: 7, word: '(entre parenthèses)'},
+                {id: 8, word: 'maïs'},
+                {id: 9, word: 'Jean-Claude'},
+                {id: 10, word: 'https://www.belgium.be'},
+                {id: 11, word: '50%'},
+                {id: 12, word: 'où'},
+                {id: 13, word: 'à bientôt'},
+                {id: 14, word: 'jean.dupont@isograd.com'},
+                {id: 15, word: 'jeanne_dupont@tosa.org'},
+				{id: 16, word: 'Là-bas'}
+            ];
+
+            // Récupération du tbody du tableau
+            const tbody = document.getElementById('tbody');
+
+            // Génération dynamique des lignes du tableau
+            words.forEach(function (w) {
+                // Création d'une ligne
+                const tr = document.createElement('tr');
+                tr.id = 'row' + w.id;
+
+                // Contenu de la ligne : mot, input, résultat
+
+
+                // spellcheck        ← Désactive la correction orthographique
+                // autocomplete  ← Désactive l'autocomplétion
+                //  onpaste ← Bloque le collage (Ctrl+V)
+                //  oncopy← Bloque la copie (Ctrl+C)
+                //  oncut=Bloque le couper (Ctrl+X)
+
+                tr.innerHTML = `
+                    <td><div class="word">${w.word}</div></td>
+                    <td>
+                        <input type="text" id="input${w.id}" oninput="reset()" spellcheck="false" autocomplete="off" onpaste="return false" oncopy="return false" oncut="return false">
+                    </td>
+                    <td class="result" id="result${w.id}"></td>
+                `;
+
+                // Ajout de la ligne au tableau
+                tbody.appendChild(tr);
+            });
+
+            // Fonction de réinitialisation (appelée à chaque saisie)
+            function reset() {
+                // Cache la boîte de score
+                document.getElementById('scoreBox').style.display = 'none';
+
+                // Réinitialise les couleurs et résultats
+                words.forEach(function (w) {
+                    document.getElementById('row' + w.id).className = '';
+                    document.getElementById('result' + w.id).innerHTML = '';
+                });
+            }
+
+            // Fonction de vérification (appelée par le bouton)
+            function verify() {
+                let score = 0;
+
+                // Parcours de chaque mot
+                words.forEach(function (w) {
+                    // Récupération de la saisie de l'utilisateur
+                    const input = document.getElementById('input' + w.id).value.trim().toLowerCase();
+
+                    // Comparaison (insensible à la casse)
+                    const correct = input === w.word.toLowerCase();
+
+                    // Incrémentation du score si correct
+                    if (correct) {
+                        score++;
+                    }
+
+                    // Application des styles et symboles
+                    document.getElementById('row' + w.id).className = correct ? 'correct' : 'incorrect';
+                    document.getElementById('result' + w.id).innerHTML = correct ? '✓' : '✗';
+                });
+
+                // Affichage du score
+                document.getElementById('scoreNum').innerHTML = 'Score: ' + score + ' / ' + words.length;
+
+                // Message personnalisé selon le score
+                if (score === words.length) {
+                    document.getElementById('scoreMsg').innerHTML = '🎉 Parfait ! Tous les mots sont corrects !';
+                } else {
+                    document.getElementById('scoreMsg').innerHTML = 'Vous avez ' + score + ' mot' + (score > 1 ? 's' : '') + ' correct' + (score > 1 ? 's' : '');
+                }
+
+                // Affichage de la boîte de score
+                document.getElementById('scoreBox').style.display = 'block';
+            }
+        </script>
+    </body>
+</html>
