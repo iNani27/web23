@@ -1,0 +1,523 @@
+<!doctype html>
+<html lang="fr">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <title>Clic à gauche, double clic ou clic à droite </title>
+        <style>
+            :root{
+                --gap:12px;
+                --tile-radius:8px;
+                --bg:#071029;
+                --card:rgba(255,255,255,0.03);
+                --accent:#60a5fa;
+                --wrong:#fb7185;
+            }
+            *{
+                box-sizing:border-box
+            }
+            body{
+                margin:0;
+                min-height:100vh;
+                font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+                background: linear-gradient(180deg,#071029 0%, #0f172a 100%);
+                color:#e6eef8;
+                padding:20px;
+            }
+
+            header{
+                display:flex;
+                justify-content:space-between;
+                gap:12px;
+                align-items:center;
+                flex-wrap:wrap
+            }
+            h1{
+                margin:0;
+                font-size:1.1rem
+            }
+            .lead{
+                margin:0;
+                opacity:.9;
+                font-size:.95rem
+            }
+
+            .controls{
+                display:flex;
+                gap:8px;
+                align-items:center;
+                margin-top:6px;
+                flex-wrap:wrap
+            }
+            button, input[type="checkbox"] + label{
+                background:transparent;
+                border:1px solid rgba(255,255,255,0.06);
+                color:#cff;
+                padding:8px 12px;
+                border-radius:8px;
+                cursor:pointer;
+                font-weight:600;
+                font-size:0.95rem;
+            }
+            .switch{
+                display:inline-flex;
+                gap:8px;
+                align-items:center;
+            }
+
+            /* 12-column grid */
+            .grid{
+                display:grid;
+                grid-template-columns: repeat(12, 1fr);
+                gap:var(--gap);
+                margin-top:18px;
+                align-items:stretch;
+            }
+
+            .tile{
+                grid-column: span 3; /* 4 per row on desktop */
+                border-radius:var(--tile-radius);
+                overflow:hidden;
+                position:relative;
+                min-height:120px;
+                background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+                border:1px solid rgba(255,255,255,0.03);
+                box-shadow: 0 8px 20px rgba(2,6,23,0.6);
+                cursor:pointer;
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                user-select:none;
+                transition: transform .16s ease;
+            }
+            .tile:active{
+                transform: translateY(1px)
+            }
+            .tile img{
+                width:100%;
+                height:100%;
+                object-fit:cover;
+                display:block;
+                opacity:1;
+                transition: opacity .35s ease, transform .35s ease;
+            }
+
+            .overlay{
+                position:absolute;
+                inset:8px;
+                display:flex;
+                justify-content:flex-end;
+                align-items:flex-start;
+                pointer-events:none;
+            }
+            .badge{
+                pointer-events:auto;
+                background: rgba(0,0,0,0.45);
+                color:#fff;
+                padding:6px 8px;
+                border-radius:6px;
+                font-size:0.82rem;
+                display:inline-flex;
+                gap:8px;
+                align-items:center;
+                backdrop-filter: blur(4px);
+            }
+
+            .icon {
+                width:18px;
+                height:18px;
+                display:inline-block;
+            }
+
+            /* When an image is correctly removed: keep the tile's place but hide the image */
+            .tile.gone {
+                pointer-events:none;
+            }
+            .tile.gone img {
+                opacity:0;
+                transform:scale(.98);
+            }
+            .tile.gone .overlay {
+                opacity:0;
+                transition: opacity .25s ease;
+            }
+
+            /* small visual "empty" look (optional) */
+            .tile.gone {
+                background: linear-gradient(180deg, rgba(255,255,255,0.006), rgba(255,255,255,0.004));
+                border-style:dashed;
+            }
+
+            @keyframes shake {
+                0%{
+                    transform:translateX(0)
+                }
+                25%{
+                    transform:translateX(-6px)
+                }
+                50%{
+                    transform:translateX(6px)
+                }
+                75%{
+                    transform:translateX(-4px)
+                }
+                100%{
+                    transform:translateX(0)
+                }
+            }
+            .wrong{
+                animation:shake .45s ease;
+                border-color: rgba(251,113,133,0.95);
+                box-shadow: 0 10px 26px rgba(251,113,133,0.06)
+            }
+
+            /* responsive spans */
+            @media (max-width:1000px){
+                .tile{
+                    grid-column: span 6;
+                }
+            } /* 2 per row */
+            @media (max-width:560px){
+                .tile{
+                    grid-column: span 12;
+                }
+            } /* 1 per row */
+
+            .status{
+                margin-top:10px;
+                display:flex;
+                gap:8px;
+                align-items:center;
+                flex-wrap:wrap
+            }
+            .chip{
+                background:rgba(255,255,255,0.03);
+                padding:6px 10px;
+                border-radius:999px;
+                font-weight:600;
+                display:inline-flex;
+                gap:8px;
+                align-items:center
+            }
+            .dot{
+                width:10px;
+                height:10px;
+                border-radius:50%;
+                display:inline-block
+            }
+
+            .instructions{
+                margin-top:14px;
+                color:#cfe6ff;
+                opacity:.95
+            }
+            .hint{
+                font-size:0.88rem;
+                margin-top:6px;
+                opacity:.9
+            }
+
+            /* focus */
+            .tile:focus{
+                outline:3px solid rgba(96,165,250,0.18);
+                outline-offset:4px;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <div>
+                <h1>Clic à gauche, double clic ou clic à droite </h1>
+               <!-- <p class="lead">Les images sont affichées aléatoirement. Pour chaque image, effectuez l'action correspondante pour la faire disparaître.</p>-->
+
+                <div class="controls" aria-hidden="false">
+                    <div class="switch">
+                        <input id="showLabels" type="checkbox" />
+                        <label for="showLabels">Afficher les étiquettes d'action</label>
+                    </div>
+                    <button id="resetBtn" title="Recréer la grille">Recommencer</button>
+                </div>
+
+                <div class="status" aria-live="polite" aria-atomic="true">
+                    <div class="chip"><span class="dot" style="background:var(--accent)"></span> Restantes: <strong id="total" style="margin-left:8px">0</strong></div>
+                    <div class="chip"><span class="dot" style="background:#8b5cf6"></span> Clic gauche: <strong id="leftCount" style="margin-left:8px">0</strong></div>
+                    <div class="chip"><span class="dot" style="background:#f59e0b"></span> Double‑clic: <strong id="dblCount" style="margin-left:8px">0</strong></div>
+                    <div class="chip"><span class="dot" style="background:#ef4444"></span> Clic droit: <strong id="rightCount" style="margin-left:8px">0</strong></div>
+                </div>
+            </div>
+            <div>
+                <!-- mapping and shortcuts hidden as requested -->
+            </div>
+        </header>
+
+        <main>
+            <div id="grid" class="grid" role="application" aria-label="Grille d'images — jeu des clics"></div>
+
+            <!-- instructions text removed/hidden per request -->
+            <div class="instructions" aria-hidden="true" style="display:none;"></div>
+        </main>
+
+        <script>
+            (function () {
+                const grid = document.getElementById('grid');
+                const resetBtn = document.getElementById('resetBtn');
+                const showLabelsCheckbox = document.getElementById('showLabels');
+                const totalEl = document.getElementById('total');
+                const leftEl = document.getElementById('leftCount');
+                const dblEl = document.getElementById('dblCount');
+                const rightEl = document.getElementById('rightCount');
+
+                // Filenames fournis par l'utilisateur — doivent être disponibles dans le même dossier que la page
+                const SOURCE_IMAGES = [
+                    'clic.jpg', // doit être retirée par un clic gauche
+                    'clic_droit.jpg', // doit être retirée par un clic droit
+                    'dbl_clic.jpg'    // doit être retirée par un double clic
+                ];
+
+                // Map fichier -> action attendue
+                function expectedActionFromFilename(filename) {
+                    if (!filename)
+                        return 'click';
+                    const n = filename.toLowerCase();
+                    if (n.includes('clic_droit') || n.includes('clic-droit') || n.includes('right'))
+                        return 'right';
+                    if (n.includes('dbl') || n.includes('double') || n.includes('dbl_clic'))
+                        return 'dblclick';
+                    if (n.includes('clic') || n.includes('click'))
+                        return 'click';
+                    return 'click';
+                }
+
+                // build icon markup
+                function iconSVG(action) {
+                    if (action === 'click') {
+                        return '<svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 3l9 5 6 6-5 4-1-7-9-8z" fill="#8b5cf6"/></svg>';
+                    } else if (action === 'dblclick') {
+                        return '<svg class="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><g fill="#f59e0b"><path d="M4 3h5v2H6v3H4z"/><path d="M12 3h5v2h-3v3h-2z"/></g></svg>';
+                    } else {
+                        return '<svg class="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L8 8h3v8h2V8h3l-4-6z" fill="#ef4444"/></svg>';
+                    }
+                }
+
+                // shuffle array
+                function shuffle(a) {
+                    const arr = a.slice();
+                    for (let i = arr.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [arr[i], arr[j]] = [arr[j], arr[i]];
+                    }
+                    return arr;
+                }
+
+                // create tiles: we will create up to 12 tiles; each tile picks randomly one of the provided images
+                function buildGrid() {
+                    grid.innerHTML = '';
+                    const tilesCount = 12;
+                    // create an array of length tilesCount with random picks from SOURCE_IMAGES
+                    const picks = Array.from({length: tilesCount}, () => {
+                        return SOURCE_IMAGES[Math.floor(Math.random() * SOURCE_IMAGES.length)];
+                    });
+
+                    // shuffle the picks so positions random
+                    const shuffled = shuffle(picks);
+
+                    shuffled.forEach((filename, idx) => {
+                        const action = expectedActionFromFilename(filename);
+                        const tile = document.createElement('div');
+                        tile.className = 'tile';
+                        tile.tabIndex = 0;
+                        tile.setAttribute('role', 'button');
+                        tile.setAttribute('aria-label', `Vignette ${idx + 1}`);
+                        tile.dataset.expect = action;
+                        tile.dataset.filename = filename;
+                        // image element (use relative path)
+                        const img = document.createElement('img');
+                        img.src = filename;
+                        img.alt = `Image ${idx + 1}`;
+                        tile.appendChild(img);
+
+                        // overlay badge (hidden by default, controlled by checkbox)
+                        const overlay = document.createElement('div');
+                        overlay.className = 'overlay';
+                        overlay.innerHTML = `<div class="badge" aria-hidden="true">${iconSVG(action)} <span style="font-weight:600">${action === 'click' ? 'Clic' : action === 'dblclick' ? 'Double' : 'Clic droit'}</span></div>`;
+                        tile.appendChild(overlay);
+
+                        grid.appendChild(tile);
+                    });
+
+                    // apply initial label visibility
+                    applyLabelVisibility();
+                    updateCounts();
+                }
+
+                function applyLabelVisibility() {
+                    const show = showLabelsCheckbox.checked;
+                    grid.querySelectorAll('.overlay').forEach(o => {
+                        o.style.display = show ? 'flex' : 'none';
+                    });
+                }
+
+                function updateCounts() {
+                    const tiles = Array.from(grid.querySelectorAll('.tile')).filter(t => t.dataset.removed !== '1');
+                    const totals = {click: 0, dblclick: 0, right: 0};
+                    tiles.forEach(t => {
+                        const a = t.dataset.expect;
+                        totals[a] = (totals[a] || 0) + 1;
+                    });
+                    totalEl.textContent = tiles.length;
+                    leftEl.textContent = totals.click;
+                    dblEl.textContent = totals.dblclick;
+                    rightEl.textContent = totals.right;
+                }
+
+                // wrong feedback visual
+                function wrongFeedback(tile) {
+                    if (!tile || tile.dataset.removed === '1')
+                        return;
+                    tile.classList.remove('wrong');
+                    void tile.offsetWidth; // force reflow to restart animation
+                    tile.classList.add('wrong');
+                    setTimeout(() => tile.classList.remove('wrong'), 700);
+                }
+
+                // remove tile image but keep the tile place in the grid
+                function makeDisappear(tile) {
+                    if (!tile || tile.dataset.removed === '1')
+                        return;
+                    tile.dataset.removed = '1';
+                    const img = tile.querySelector('img');
+                    // animate image fade, then hide it visually but keep tile
+                    tile.classList.add('gone');
+                    // after image transition end, set aria-hidden to remove from accessibility tree
+                    const onEnd = () => {
+                        if (img)
+                            img.style.visibility = 'hidden';
+                        tile.setAttribute('aria-hidden', 'true');
+                        updateCounts();
+                        // announce for screen readers (off-screen)
+                        const sr = document.createElement('div');
+                        sr.setAttribute('role', 'status');
+                        sr.style.position = 'absolute';
+                        sr.style.left = '-9999px';
+                        sr.textContent = 'Image supprimée';
+                        document.body.appendChild(sr);
+                        setTimeout(() => sr.remove(), 700);
+                    };
+                    if (img) {
+                        img.addEventListener('transitionend', onEnd, {once: true});
+                        // If transitionend doesn't fire (older browsers), fallback after 400ms
+                        setTimeout(() => {
+                            if (tile.dataset.removed === '1' && getComputedStyle(img).opacity === '0') {
+                                onEnd();
+                            }
+                        }, 450);
+                    } else {
+                        onEnd();
+                    }
+                }
+
+                // Event delegation
+                grid.addEventListener('click', (e) => {
+                    const tile = e.target.closest('.tile');
+                    if (!tile)
+                        return;
+                    if (tile.dataset.removed === '1')
+                        return;
+                    const expect = tile.dataset.expect;
+                    // if expecting dblclick, ignore single left-click as "not yet" and give hint
+                    if (expect === 'dblclick') {
+                        wrongFeedback(tile);
+                        return;
+                    }
+                    if (expect === 'click') {
+                        makeDisappear(tile);
+                    } else {
+                        wrongFeedback(tile);
+                    }
+                });
+
+                grid.addEventListener('dblclick', (e) => {
+                    const tile = e.target.closest('.tile');
+                    if (!tile)
+                        return;
+                    if (tile.dataset.removed === '1')
+                        return;
+                    const expect = tile.dataset.expect;
+                    if (expect === 'dblclick') {
+                        makeDisappear(tile);
+                    } else {
+                        wrongFeedback(tile);
+                    }
+                });
+
+                // Right-click handling: suppress context menu only for tiles
+                grid.addEventListener('contextmenu', (e) => {
+                    const tile = e.target.closest('.tile');
+                    if (!tile)
+                        return;
+                    if (tile.dataset.removed === '1')
+                        return;
+                    e.preventDefault(); // prevent browser menu on tiles to allow right-click game action
+                    const expect = tile.dataset.expect;
+                    if (expect === 'right') {
+                        makeDisappear(tile);
+                    } else {
+                        wrongFeedback(tile);
+                    }
+                });
+
+                // Keyboard support for accessibility and simulation of mouse actions
+                grid.addEventListener('keydown', (e) => {
+                    const tile = e.target.closest('.tile');
+                    if (!tile)
+                        return;
+                    if (tile.dataset.removed === '1')
+                        return;
+
+                    // Enter = left click
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        tile.click();
+                        return;
+                    }
+
+                    // Shift+Enter = simulated double-click
+                    if (e.key === 'Enter' && e.shiftKey) {
+                        e.preventDefault();
+                        const dbl = new MouseEvent('dblclick', {bubbles: true, cancelable: true});
+                        tile.dispatchEvent(dbl);
+                        return;
+                    }
+
+                    // ContextMenu key or Shift+F10 => simulate contextmenu (right-click)
+                    if (e.key === 'ContextMenu' || (e.shiftKey && e.key === 'F10')) {
+                        e.preventDefault();
+                        const cm = new Event('contextmenu', {bubbles: true, cancelable: true});
+                        tile.dispatchEvent(cm);
+                        return;
+                    }
+
+                    // Delete as convenience for left-click-expected removal
+                    if (e.key === 'Delete' || e.key === 'Backspace') {
+                        e.preventDefault();
+                        if (tile.dataset.expect === 'click')
+                            makeDisappear(tile);
+                        else
+                            wrongFeedback(tile);
+                    }
+                });
+
+                // controls
+                resetBtn.addEventListener('click', buildGrid);
+                showLabelsCheckbox.addEventListener('change', applyLabelVisibility);
+
+                // initialize
+                buildGrid();
+
+                // Expose small API for debugging in console
+                window.JEU_CLICS = {rebuild: buildGrid, grid};
+
+            })();
+        </script>
+    </body>
+</html>
