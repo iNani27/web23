@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
     <head>
@@ -7,207 +6,534 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="description" content="Web tuto">
         <meta name="keywords" content="clic, double clic et menu contextuel">
-        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
         <style>
-            [value~="Selectionner"]{color:#000!important;background-color:#87CEFA!important}/*windows light blue*/
-            [value~="Ouvrir"]{color:#000!important;background-color:#F8D775!important;}/*Crayola's Dandelion*/
-            [value~="Menu_contextuel"]{color:#000!important;background-color:#DCDCDC!important;}/*light grey*/
+            :root{
+                --gap:12px;
+                --tile-radius:8px;
+                --bg:#ffffff;
+                --text:#0b1220;
+                --card:#f8fafc;
+                --accent:#2563eb;
+                --accent-2:#8b5cf6;
+                --warn:#f59e0b;
+                --danger:#ef4444;
+                --muted: rgba(11,18,32,0.06);
+            }
 
-            .w3-2021-marigold
-            {color:#fff!important;background-color:#FDAC53!important}
-            .w3-2021-cerulean
-            {color:#000!important;background-color:#9BB7D4!important}
-            .w3-2021-rust
-            {color:#fff!important;background-color:#B55A30!important}
-            .w3-2021-illuminating
-            {color:#000!important;background-color:#F5DF4D!important}
-            .w3-2021-french-blue
-            {color:#fff!important;background-color:#0072B5!important}
-            .w3-2021-green-ash
-            {color:#000!important;background-color:#A0DAA9!important}
-            .w3-2021-burnt-coral
-            {color:#fff!important;background-color:#E9897E!important}
-            .w3-2021-mint
-            {color:#fff!important;background-color:#00A170!important}
-            .w3-2021-amethyst-orchid
-            {color:#fff!important;background-color:#926AA6!important}
-            .w3-2021-raspberry-sorbet
-            {color:#fff!important;background-color:#D2386C!important}
-            .w3-2021-inkwell
-            {color:#fff!important;background-color:#363945!important}
-            .w3-2021-ultimate-gray
-            {color:#fff!important;background-color:#939597!important}
-            .w3-2021-buttercream
-            {color:#000!important;background-color:#EFE1CE!important}
-            .w3-2021-desert-mist
-            {color:#000!important;background-color:#E0B589!important}
-            .w3-2021-willow
-            {color:#fff!important;background-color:#9A8B4F!important}
+            *{
+                box-sizing:border-box
+            }
+            html,body{
+                height:100%
+            }
+            body{
+                margin:0;
+                min-height:100vh;
+                font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+                background: var(--bg);
+                color:var(--text);
+                padding:20px;
+                -webkit-font-smoothing:antialiased;
+                -moz-osx-font-smoothing:grayscale;
+            }
+
+            header{
+                display:flex;
+                justify-content:space-between;
+                gap:12px;
+                align-items:center;
+                flex-wrap:wrap
+            }
+            h1{
+                margin:0;
+                font-size:1.1rem
+            }
+            .lead{
+                margin:0;
+                opacity:.9;
+                font-size:.95rem
+            }
+
+            .controls{
+                display:flex;
+                gap:8px;
+                align-items:center;
+                margin-top:6px;
+                flex-wrap:wrap
+            }
+            button, input[type="checkbox"] + label{
+                background:transparent;
+                border:1px solid var(--muted);
+                color:var(--text);
+                padding:8px 12px;
+                border-radius:8px;
+                cursor:pointer;
+                font-weight:600;
+                font-size:0.95rem;
+            }
+            .switch{
+                display:inline-flex;
+                gap:8px;
+                align-items:center;
+            }
+
+            /* 12-column grid */
+            .grid{
+                display:grid;
+                grid-template-columns: repeat(12, 1fr);
+                gap:var(--gap);
+                margin-top:18px;
+                align-items:stretch;
+            }
+
+            .tile{
+                grid-column: span 3; /* 4 per row on desktop */
+                border-radius:var(--tile-radius);
+                overflow:hidden;
+                position:relative;
+                min-height:120px;
+                background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+                border:1px solid var(--muted);
+                box-shadow: 0 6px 18px rgba(11,18,32,0.04);
+                cursor:pointer;
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                user-select:none;
+                transition: transform .16s ease, box-shadow .16s ease;
+            }
+            .tile:active{
+                transform: translateY(1px)
+            }
+            .tile img{
+                width:100%;
+                height:100%;
+                object-fit:cover;
+                display:block;
+                opacity:1;
+                transition: opacity .35s ease, transform .35s ease;
+            }
+
+            .overlay{
+                position:absolute;
+                inset:8px;
+                display:flex;
+                justify-content:flex-end;
+                align-items:flex-start;
+                pointer-events:none;
+            }
+            .badge{
+                pointer-events:auto;
+                background: rgba(255,255,255,0.9);
+                color:var(--text);
+                padding:6px 8px;
+                border-radius:6px;
+                font-size:0.82rem;
+                display:inline-flex;
+                gap:8px;
+                align-items:center;
+                box-shadow: 0 2px 6px rgba(11,18,32,0.04);
+                border:1px solid rgba(11,18,32,0.04);
+                backdrop-filter: none;
+            }
+
+            .icon {
+                width:18px;
+                height:18px;
+                display:inline-block;
+            }
+
+            /* When an image is correctly removed: keep the tile's place but hide the image */
+            .tile.gone {
+                pointer-events:none;
+            }
+            .tile.gone img {
+                opacity:0;
+                transform:scale(.98);
+            }
+            .tile.gone .overlay {
+                opacity:0;
+                transition: opacity .25s ease;
+            }
+
+            /* small visual "empty" look */
+            .tile.gone {
+                background: linear-gradient(180deg, rgba(11,18,32,0.01), rgba(11,18,32,0.005));
+                border-style:dashed;
+                border-color: rgba(11,18,32,0.06);
+            }
+
+            @keyframes shake {
+                0%{
+                    transform:translateX(0)
+                }
+                25%{
+                    transform:translateX(-6px)
+                }
+                50%{
+                    transform:translateX(6px)
+                }
+                75%{
+                    transform:translateX(-4px)
+                }
+                100%{
+                    transform:translateX(0)
+                }
+            }
+            .wrong{
+                animation:shake .45s ease;
+                border-color: rgba(239,68,68,0.9);
+                box-shadow: 0 8px 18px rgba(239,68,68,0.04)
+            }
+
+            /* responsive spans */
+            @media (max-width:1000px){
+                .tile{
+                    grid-column: span 6;
+                }
+            } /* 2 per row */
+            @media (max-width:560px){
+                .tile{
+                    grid-column: span 12;
+                }
+            } /* 1 per row */
+
+            .status{
+                margin-top:10px;
+                display:flex;
+                gap:8px;
+                align-items:center;
+                flex-wrap:wrap
+            }
+            .chip{
+                background:rgba(11,18,32,0.03);
+                padding:6px 10px;
+                border-radius:999px;
+                font-weight:600;
+                display:inline-flex;
+                gap:8px;
+                align-items:center;
+                color:var(--text)
+            }
+            .dot{
+                width:10px;
+                height:10px;
+                border-radius:50%;
+                display:inline-block
+            }
+
+            .instructions{
+                margin-top:14px;
+                color:var(--text);
+                opacity:.95
+            }
+            .hint{
+                font-size:0.88rem;
+                margin-top:6px;
+                opacity:.9
+            }
+
+            /* focus */
+            .tile:focus{
+                outline:3px solid rgba(37,99,235,0.12);
+                outline-offset:4px;
+            }
         </style>
     </head>
     <body>
-        <h1 class="w3-center">
-            Clic à gauche, double clic ou clic à droite
-        </h1>
+        <header>
+            <div>
+                <h1>Jeu des clics</h1>
+                <p class="lead">Les images sont affichées aléatoirement. Pour chaque image, effectuez l'action correspondante pour la faire disparaître.</p>
 
-        <!--     <a class="w3-btn w3-2021-amethyst-orchid"></a>
-             <a class="w3-btn w3-2021-burnt-coral"></a>
-             <a class="w3-btn w3-2021-buttercream"></a>
-             <a class="w3-btn w3-2021-cerulean"></a>
-             <a class="w3-btn w3-2021-desert-mist"></a>
-             <a class="w3-btn w3-2021-french-blue"></a>
-             <a class="w3-btn w3-2021-green-ash"></a>
-             <a class="w3-btn w3-2021-illuminating"></a>
-             <a class="w3-btn w3-2021-inkwell"></a>
-             <a class="w3-btn w3-2021-marigold"></a>
-             <a class="w3-btn w3-2021-mint"></a>
-             <a class="w3-btn w3-2021-raspberry-sorbet"></a>     
-             <a class="w3-btn w3-2021-rust"></a>   
-             <a class="w3-btn w3-2021-ultimate-gray"></a>
-             <a class="w3-btn w3-2021-willow"></a>
-        -->
-        <table class="w3-table-all w3-centered">
-            <tr>
-                <td><input type="button" class="w3-btn" id="1"></td>
-                <td><input type="button" class="w3-btn" id="2" ></td>
-                <td><input type="button" class="w3-btn"  id="3" ></td>
-                <td><input type="button" class="w3-btn" id="4" ></td>
-                <td><input type="button" class="w3-btn" id="5"></td>
+                <div class="controls" aria-hidden="false">
+                    <div class="switch">
+                        <input id="showLabels" type="checkbox" />
+                        <label for="showLabels">Afficher les étiquettes d'action</label>
+                    </div>
+                    <button id="resetBtn" title="Recréer la grille">Recommencer</button>
+                </div>
 
-            </tr>
-            <tr>
-                <td><input type="button" class="w3-btn" id="6" ></td>
-                <td><input type="button" class="w3-btn" id="7" ></td>
-                <td><input type="button" class="w3-btn"  id="8" ></td>
-                <td><input type="button" class="w3-btn" id="9" ></td>
-                <td><input type="button" class="w3-btn" id="10"></td>
+                <div class="status" aria-live="polite" aria-atomic="true">
+                    <div class="chip"><span class="dot" style="background:var(--accent)"></span> Restantes: <strong id="total" style="margin-left:8px">0</strong></div>
+                    <div class="chip"><span class="dot" style="background:var(--accent-2)"></span> Clic gauche: <strong id="leftCount" style="margin-left:8px">0</strong></div>
+                    <div class="chip"><span class="dot" style="background:var(--warn)"></span> Double‑clic: <strong id="dblCount" style="margin-left:8px">0</strong></div>
+                    <div class="chip"><span class="dot" style="background:var(--danger)"></span> Clic droit: <strong id="rightCount" style="margin-left:8px">0</strong></div>
+                </div>
+            </div>
+            <div>
+                <!-- mapping and shortcuts hidden as requested -->
+            </div>
+        </header>
 
-            </tr>
+        <main>
+            <div id="grid" class="grid" role="application" aria-label="Grille d'images — jeu des clics"></div>
 
-            <tr>
-                <td><input type="button" class="w3-btn" id="11" ></td>
-                <td><input type="button" class="w3-btn" id="12" ></td>
-                <td><input type="button" class="w3-btn"  id="13" ></td>
-                <td><input type="button" class="w3-btn" id="14" ></td>
-                <td><input type="button" class="w3-btn" id="15"></td>
-
-            </tr>
-            <tr>
-                <td><input type="button" class="w3-btn" id="16" ></td>
-                <td><input type="button" class="w3-btn" id="17" ></td>
-                <td><input type="button" class="w3-btn"  id="18" ></td>
-                <td><input type="button" class="w3-btn" id="19" ></td>
-                <td><input type="button" class="w3-btn" id="20"></td>
-
-            </tr>
-            <tr>
-                <td><input type="button" class="w3-btn" id="21" ></td>
-                <td><input type="button" class="w3-btn" id="22" ></td>
-                <td><input type="button" class="w3-btn"  id="23" ></td>
-                <td><input type="button" class="w3-btn" id="24" ></td>
-                <td><input type="button" class="w3-btn" id="25"></td>
-
-            </tr>
-            <tr>
-                <td><input type="button" class="w3-btn" id="26" ></td>
-                <td><input type="button" class="w3-btn" id="27" ></td>
-                <td><input type="button" class="w3-btn"  id="28" ></td>
-                <td><input type="button" class="w3-btn" id="29" ></td>
-                <td><input type="button" class="w3-btn" id="30"></td>
-
-            </tr>
-            <tr>
-                <td><input type="button" class="w3-btn" id="31" ></td>
-                <td><input type="button" class="w3-btn" id="32" ></td>
-                <td><input type="button" class="w3-btn"  id="33" ></td>
-                <td><input type="button" class="w3-btn" id="34" ></td>
-                <td><input type="button" class="w3-btn" id="35"></td>
-
-            </tr>
-            <tr>
-                <td><input type="button" class="w3-btn" id="36" ></td>
-                <td><input type="button" class="w3-btn" id="37" ></td>
-                <td><input type="button" class="w3-btn"  id="38" ></td>
-                <td><input type="button" class="w3-btn" id="39" ></td>
-                <td><input type="button" class="w3-btn" id="40"></td>
-
-            </tr>
-        </table>
-
-
-
-
-        <script type="text/javascript" >
-
-            var tab = new Array("Ouvrir", "Selectionner", "Menu_contextuel");
-            function getRandomArbitary(min, max) {
-                return Math.floor(Math.random() * (max - min) + min);
-            }
-
-            for (var i = 1; i <= 40; i++) {
-                var aleatoire = getRandomArbitary(0, 3);
-                var cible = document.getElementById(i);
-                cible.setAttribute("value", tab[aleatoire]);
-            }
-
-            for (var i = 1; i <= 40; i++) {
-
-                var cible = document.getElementById(i);
-                var valeur = cible.getAttribute("value");
-                cible.setAttribute("name", valeur);
-
-            }
-
-        </script>
+            <!-- instructions hidden per request -->
+            <div class="instructions" aria-hidden="true" style="display:none;"></div>
+        </main>
 
         <script>
+            (function () {
+                const grid = document.getElementById('grid');
+                const resetBtn = document.getElementById('resetBtn');
+                const showLabelsCheckbox = document.getElementById('showLabels');
+                const totalEl = document.getElementById('total');
+                const leftEl = document.getElementById('leftCount');
+                const dblEl = document.getElementById('dblCount');
+                const rightEl = document.getElementById('rightCount');
 
-            $(document).ready(function () {
+                // Filenames fournis par l'utilisateur — doivent être disponibles dans le même dossier que la page
+                const SOURCE_IMAGES = [
+                    'clic.jpg', // doit être retirée par un clic gauche
+                    'clic_droit.jpg', // doit être retirée par un clic droit
+                    'dbl_clic.jpg'    // doit être retirée par un double clic
+                ];
 
-
-                for (var i = 1; i < 41; i++) {
-
-                    $("#" + i)
-                            .click(function (e) {
-                                if (e.which != 3) {
-                                    if ($(this).attr("name") == "Selectionner")
-                                        $(this).hide();
-                                }
-
-
-                            })
-                            .mousedown(function (e) {
-                                if (e.which == 3) {
-                                    if ($(this).attr("name") == "Menu_contextuel")
-                                        $(this).slideUp(2025); // 1000 = 1sec. entre 2 clic du double click cf https://www.w3schools.com/jquery/tryit.asp?filename=tryjquery_eff_slideup_slidedown_speed et https://www.w3schools.com/jquery/jquery_slide.asp
-
-                                }
-                            })
-                            .dblclick(function () {
-                                if ($(this).attr("name") == "Ouvrir")
-                                    $(this).fadeOut(1000);
-
-
-                            });
-
-
-
-
+                // Map fichier -> action attendue
+                function expectedActionFromFilename(filename) {
+                    if (!filename)
+                        return 'click';
+                    const n = filename.toLowerCase();
+                    if (n.includes('clic_droit') || n.includes('clic-droit') || n.includes('right'))
+                        return 'right';
+                    if (n.includes('dbl') || n.includes('double') || n.includes('dbl_clic'))
+                        return 'dblclick';
+                    if (n.includes('clic') || n.includes('click'))
+                        return 'click';
+                    return 'click';
                 }
-            });
+
+                // build icon markup (darker icons for light theme)
+                function iconSVG(action) {
+                    if (action === 'click') {
+                        return '<svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 3l9 5 6 6-5 4-1-7-9-8z" fill="#6b21a8"/></svg>';
+                    } else if (action === 'dblclick') {
+                        return '<svg class="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><g fill="#b45309"><path d="M4 3h5v2H6v3H4z"/><path d="M12 3h5v2h-3v3h-2z"/></g></svg>';
+                    } else {
+                        return '<svg class="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L8 8h3v8h2V8h3l-4-6z" fill="#dc2626"/></svg>';
+                    }
+                }
+
+                // shuffle array
+                function shuffle(a) {
+                    const arr = a.slice();
+                    for (let i = arr.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [arr[i], arr[j]] = [arr[j], arr[i]];
+                    }
+                    return arr;
+                }
+
+                // create tiles: we will create up to 12 tiles; each tile picks randomly one of the provided images
+                function buildGrid() {
+                    grid.innerHTML = '';
+                    const tilesCount = 12;
+                    // create an array of length tilesCount with random picks from SOURCE_IMAGES
+                    const picks = Array.from({length: tilesCount}, () => {
+                        return SOURCE_IMAGES[Math.floor(Math.random() * SOURCE_IMAGES.length)];
+                    });
+
+                    // shuffle the picks so positions random
+                    const shuffled = shuffle(picks);
+
+                    shuffled.forEach((filename, idx) => {
+                        const action = expectedActionFromFilename(filename);
+                        const tile = document.createElement('div');
+                        tile.className = 'tile';
+                        tile.tabIndex = 0;
+                        tile.setAttribute('role', 'button');
+                        tile.setAttribute('aria-label', `Vignette ${idx + 1}`);
+                        tile.dataset.expect = action;
+                        tile.dataset.filename = filename;
+                        // image element (use relative path)
+                        const img = document.createElement('img');
+                        img.src = filename;
+                        img.alt = `Image ${idx + 1}`;
+                        tile.appendChild(img);
+
+                        // overlay badge (hidden by default, controlled by checkbox)
+                        const overlay = document.createElement('div');
+                        overlay.className = 'overlay';
+                        overlay.innerHTML = `<div class="badge" aria-hidden="true">${iconSVG(action)} <span style="font-weight:600">${action === 'click' ? 'Clic' : action === 'dblclick' ? 'Double' : 'Clic droit'}</span></div>`;
+                        tile.appendChild(overlay);
+
+                        grid.appendChild(tile);
+                    });
+
+                    // apply initial label visibility
+                    applyLabelVisibility();
+                    updateCounts();
+                }
+
+                function applyLabelVisibility() {
+                    const show = showLabelsCheckbox.checked;
+                    grid.querySelectorAll('.overlay').forEach(o => {
+                        o.style.display = show ? 'flex' : 'none';
+                    });
+                }
+
+                function updateCounts() {
+                    const tiles = Array.from(grid.querySelectorAll('.tile')).filter(t => t.dataset.removed !== '1');
+                    const totals = {click: 0, dblclick: 0, right: 0};
+                    tiles.forEach(t => {
+                        const a = t.dataset.expect;
+                        totals[a] = (totals[a] || 0) + 1;
+                    });
+                    totalEl.textContent = tiles.length;
+                    leftEl.textContent = totals.click;
+                    dblEl.textContent = totals.dblclick;
+                    rightEl.textContent = totals.right;
+                }
+
+                // wrong feedback visual
+                function wrongFeedback(tile) {
+                    if (!tile || tile.dataset.removed === '1')
+                        return;
+                    tile.classList.remove('wrong');
+                    void tile.offsetWidth; // force reflow to restart animation
+                    tile.classList.add('wrong');
+                    setTimeout(() => tile.classList.remove('wrong'), 700);
+                }
+
+                // remove tile image but keep the tile place in the grid
+                function makeDisappear(tile) {
+                    if (!tile || tile.dataset.removed === '1')
+                        return;
+                    tile.dataset.removed = '1';
+                    const img = tile.querySelector('img');
+                    // animate image fade, then hide it visually but keep tile
+                    tile.classList.add('gone');
+                    // after image transition end, set aria-hidden to remove from accessibility tree
+                    const onEnd = () => {
+                        if (img)
+                            img.style.visibility = 'hidden';
+                        tile.setAttribute('aria-hidden', 'true');
+                        updateCounts();
+                        // announce for screen readers (off-screen)
+                        const sr = document.createElement('div');
+                        sr.setAttribute('role', 'status');
+                        sr.style.position = 'absolute';
+                        sr.style.left = '-9999px';
+                        sr.textContent = 'Image supprimée';
+                        document.body.appendChild(sr);
+                        setTimeout(() => sr.remove(), 700);
+                    };
+                    if (img) {
+                        img.addEventListener('transitionend', onEnd, {once: true});
+                        // If transitionend doesn't fire (older browsers), fallback after 400ms
+                        setTimeout(() => {
+                            if (tile.dataset.removed === '1' && getComputedStyle(img).opacity === '0') {
+                                onEnd();
+                            }
+                        }, 450);
+                    } else {
+                        onEnd();
+                    }
+                }
+
+                // Event delegation
+                grid.addEventListener('click', (e) => {
+                    const tile = e.target.closest('.tile');
+                    if (!tile)
+                        return;
+                    if (tile.dataset.removed === '1')
+                        return;
+                    const expect = tile.dataset.expect;
+                    // if expecting dblclick, ignore single left-click as "not yet" and give hint
+                    if (expect === 'dblclick') {
+                        wrongFeedback(tile);
+                        return;
+                    }
+                    if (expect === 'click') {
+                        makeDisappear(tile);
+                    } else {
+                        wrongFeedback(tile);
+                    }
+                });
+
+                grid.addEventListener('dblclick', (e) => {
+                    const tile = e.target.closest('.tile');
+                    if (!tile)
+                        return;
+                    if (tile.dataset.removed === '1')
+                        return;
+                    const expect = tile.dataset.expect;
+                    if (expect === 'dblclick') {
+                        makeDisappear(tile);
+                    } else {
+                        wrongFeedback(tile);
+                    }
+                });
+
+                // Right-click handling: suppress context menu only for tiles
+                grid.addEventListener('contextmenu', (e) => {
+                    const tile = e.target.closest('.tile');
+                    if (!tile)
+                        return;
+                    if (tile.dataset.removed === '1')
+                        return;
+                    e.preventDefault(); // prevent browser menu on tiles to allow right-click game action
+                    const expect = tile.dataset.expect;
+                    if (expect === 'right') {
+                        makeDisappear(tile);
+                    } else {
+                        wrongFeedback(tile);
+                    }
+                });
+
+                // Keyboard support for accessibility and simulation of mouse actions
+                grid.addEventListener('keydown', (e) => {
+                    const tile = e.target.closest('.tile');
+                    if (!tile)
+                        return;
+                    if (tile.dataset.removed === '1')
+                        return;
+
+                    // Enter = left click
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        tile.click();
+                        return;
+                    }
+
+                    // Shift+Enter = simulated double-click
+                    if (e.key === 'Enter' && e.shiftKey) {
+                        e.preventDefault();
+                        const dbl = new MouseEvent('dblclick', {bubbles: true, cancelable: true});
+                        tile.dispatchEvent(dbl);
+                        return;
+                    }
+
+                    // ContextMenu key or Shift+F10 => simulate contextmenu (right-click)
+                    if (e.key === 'ContextMenu' || (e.shiftKey && e.key === 'F10')) {
+                        e.preventDefault();
+                        const cm = new Event('contextmenu', {bubbles: true, cancelable: true});
+                        tile.dispatchEvent(cm);
+                        return;
+                    }
+
+                    // Delete as convenience for left-click-expected removal
+                    if (e.key === 'Delete' || e.key === 'Backspace') {
+                        e.preventDefault();
+                        if (tile.dataset.expect === 'click')
+                            makeDisappear(tile);
+                        else
+                            wrongFeedback(tile);
+                    }
+                });
+
+                // controls
+                resetBtn.addEventListener('click', buildGrid);
+                showLabelsCheckbox.addEventListener('change', applyLabelVisibility);
+
+                // initialize
+                buildGrid();
+
+                // Expose small API for debugging in console
+                window.JEU_CLICS = {rebuild: buildGrid, grid};
+
+            })();
         </script>
-
-
-        <script type="text/javascript">
-            document.oncontextmenu = rightClick;
-
-            function rightClick(clickEvent) {
-                clickEvent.preventDefault();
-                // return false;
-            }
-        </script>
-
     </body>
 </html>
